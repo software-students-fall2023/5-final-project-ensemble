@@ -6,7 +6,7 @@ import requests
 import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-import datetime
+from bson.objectid import ObjectId
 import re
 
 load_dotenv()
@@ -71,5 +71,10 @@ def add_sku():
         mongo.inventory_db.inventory.insert_one(sku_data)
         return redirect(url_for('home'))
     return render_template('addsku.html')
+
+@app.route('/sku/<sku>')
+def sku_details(sku):
+    sku = mongo.inventory_db.inventory.find_one({"sku": sku})
+    return render_template('sku.html', sku=sku)
 
 app.run(debug=True)

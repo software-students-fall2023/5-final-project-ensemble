@@ -114,3 +114,14 @@ tr:hover {
     width: 120px;
     text-align: left;
 }
+
+td a {
+    display: block;
+    text-decoration: none;
+    color: inherit; /* Inherits the color from the td element */
+    padding: 8px; /* Same as the padding for td */
+}
+
+td a:hover {
+    background-color: #ddd; /* Hover effect similar to the tr:hover */
+}

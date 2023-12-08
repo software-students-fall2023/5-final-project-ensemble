@@ -24,9 +24,9 @@
         <tbody>
             {% for item in inventory %}
             <tr>
-                <td>{{ item['sku'] }}</td>
-                <td>{{ item['product_name'] }}</td>
-                <td>{{ item['stock'] }}</td>
+                <td><a href="{{ url_for('sku_details', sku=item['sku']) }}">{{ item['sku'] }}</a></td>
+                <td><a href="{{ url_for('sku_details', sku=item['sku']) }}">{{ item['product_name'] }}</a></td>
+                <td><a href="{{ url_for('sku_details', sku=item['sku']) }}">{{ item['stock'] }}</a></td>
             </tr>
             {% else %}
             <tr>
