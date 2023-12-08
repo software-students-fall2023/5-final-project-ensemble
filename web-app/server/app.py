@@ -11,8 +11,7 @@ import re
 load_dotenv()
 user = os.environ["MONGO_INITDB_ROOT_USERNAME"]
 password = os.environ["MONGO_INITDB_ROOT_PASSWORD"]
-# uri = f"mongodb://{user}:{password}@localhost:27017/inventory_db"
-uri = f"mongodb://ensemble:l2Ro7dr7DzpQ@localhost:27017"
+uri = f"mongodb://{user}:{password}@localhost:27017"
 
 mongo = MongoClient(uri, server_api=ServerApi('1'))
 
