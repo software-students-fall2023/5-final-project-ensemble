@@ -1,7 +1,7 @@
 """Module providing routing."""
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, flash, redirect, jsonify, url_for
+from flask import Flask, render_template, request, flash, redirect, jsonify, url_for, session
 import requests
 import pymongo
 from pymongo.mongo_client import MongoClient
@@ -25,12 +25,48 @@ except pymongo.errors.ConnectionFailure as e:
 app=Flask(__name__, template_folder='../client/templates', static_folder='../client/static')
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
 
+
+
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if "logged_in" in session:
+            return f(*args, **kwargs)
+        else:
+            return redirect(url_for("login"))
+
+    return wrap
+
 @app.route('/')
 def home():
     """Render home page."""
     inventory = list(mongo.inventory_db.inventory.find())
     inventory.sort(key=lambda x: int(x['sku']))
     return render_template('home.html', inventory=inventory)
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        from user.authentication import UserAuthentication
+
+        return UserAuthentication().login()
+    return render_template("login.html")
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        from user.authentication import UserAuthentication
+
+        return UserAuthentication().sign_up()
+    return render_template("register.html")
+
+@app.route("/signout")
+def signout():
+    from models.authentication import UserAuthentication
+
+    UserAuthentication().sign_out()
+
+    return redirect(url_for("login"))
 
 @app.route('/search')
 def search():
