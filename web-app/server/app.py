@@ -23,6 +23,7 @@ except pymongo.errors.ConnectionFailure as e:
     print(e)
 
 app=Flask(__name__, template_folder='../client/templates', static_folder='../client/static')
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
 
 @app.route('/')
 def home():
@@ -48,19 +49,27 @@ def search():
     return render_template('home.html', inventory=inventory)
 
 @app.route('/add_sku', methods=['GET', 'POST'])
-def add_contact():
+def add_sku():
     if request.method == 'POST':
-        fsku = request.form.get("fname")
-        fname = request.form.get("pnumber")
+        fsku = request.form.get("sku")
+        fname = request.form.get("product_name")
+        if not fsku.isdigit() or len(fsku) > 10 or not fname:
+            flash("Invalid input. Please ensure all fields are correctly filled.")
+            return redirect(url_for('add_sku'))
+        
+        existing_sku = mongo.inventory_db.inventory.find_one({"sku": fsku})
+        if existing_sku:
+            flash("SKU already exists. Please enter a unique SKU.")
+            return redirect(url_for('add_sku'))
+        
         fstock = 0
-
-        contact_data = {
+        sku_data = {
             "sku": fsku,
             "product_name": fname,
             "stock": fstock
         }
-        mongo.db.contacts.insert_one(contact_data)
-        return redirect(url_for('display_all_contacts'))
+        mongo.inventory_db.inventory.insert_one(sku_data)
+        return redirect(url_for('home'))
     return render_template('addsku.html')
 
 app.run(debug=True)

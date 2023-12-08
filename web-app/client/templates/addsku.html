@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel=stylesheet href="{{ url_for('static', filename='addsku.css') }}">
+    <title>Add SKU</title>
+</head>
+<body>
+    <header>
+        <h1>Add SKU</h1>
+    </header>
+    <main>
+        <div id="flash-message-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                        <script>
+                            setTimeout(function() {
+                                document.querySelector('.flash-message').remove();
+                            }, 5000);
+                        </script>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <form method="POST" action="{{ url_for('add_sku') }}">
+            <div class="input-group">
+                <strong>SKU:</strong>
+                <input type="text" id="sku" name="sku" placeholder="Enter SKU" pattern="\d{1,10}" title="SKU must be a numeric value with a maximum of 10 digits" required>
+            </div>
+            <div class="input-group">
+                <strong>Product Name:</strong>
+                <input type="text" id="product_name" name="product_name" placeholder="Enter Product Name" required>
+            </div>
+            <div class="buttons">
+                <input type="submit" value="Add SKU" />
+                <br>
+                <a href="{{ url_for('home') }}"><input type="button" value="Cancel" /></a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

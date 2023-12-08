@@ -37,7 +37,9 @@
     </table>
     <div class="add-button-container">
         <div id="additional-buttons" class="hidden">
-            <button class="rect-button">Add Product</button>
+            <a href="{{ url_for('add_sku')}}">
+                <button class="rect-button">Add Product</button>
+              </a>
             <button class="rect-button">Add Log</button>
         </div>
         <button id="main-add-button" class="round-button" onclick="toggleButtons()">+</button>
