@@ -1,11 +1,12 @@
 """Module providing routing."""
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, flash, redirect, jsonify
+from flask import Flask, render_template, request, flash, redirect, jsonify, url_for
 import requests
 import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+import datetime
 import re
 
 load_dotenv()
@@ -45,5 +46,21 @@ def search():
     inventory = mongo.inventory_db.inventory.find(query)
 
     return render_template('home.html', inventory=inventory)
+
+@app.route('/add_sku', methods=['GET', 'POST'])
+def add_contact():
+    if request.method == 'POST':
+        fsku = request.form.get("fname")
+        fname = request.form.get("pnumber")
+        fstock = 0
+
+        contact_data = {
+            "sku": fsku,
+            "product_name": fname,
+            "stock": fstock
+        }
+        mongo.db.contacts.insert_one(contact_data)
+        return redirect(url_for('display_all_contacts'))
+    return render_template('addsku.html')
 
 app.run(debug=True)
