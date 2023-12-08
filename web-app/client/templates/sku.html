@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= stylesheet href="{{ url_for('static', filename='sku.css') }}">
+    <title>SKU Details</title>
+</head>
+<body>
+    <header>
+        <h1>SKU Details</h1>
+    </header>
+    <main>
+        <div class="buttons">
+            <a href="javascript:history.back()" id="back">&#8592; Back</a>
+        </div>
+        <div class="details-group">
+            <strong>SKU:</strong>
+            <p id="sku">{{sku.sku}}</p>
+        </div>
+        <div class="details-group">
+            <strong>Product Name:</strong>
+            <p id="productName">{{sku.product_name}}</p>
+        </div>
+    </main>
+</body>
+</html>
