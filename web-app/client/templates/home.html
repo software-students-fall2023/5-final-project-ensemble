@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='home.css') }}"
+    />
+    <title>Inventory</title>
+</head>
+<body>
+    <form action="{{url_for('search')}}" method="get" class="search-bar">
+        <input type="text" name="query" placeholder="Enter SKU or Product Name">
+        <button type="submit">Search</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Product Name</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in inventory %}
+            <tr>
+                <td>{{ item['sku'] }}</td>
+                <td>{{ item['product_name'] }}</td>
+                <td>{{ item['stock'] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No items found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
