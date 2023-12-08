@@ -65,7 +65,6 @@ def signout():
     from models.authentication import UserAuthentication
 
     UserAuthentication().sign_out()
-
     return redirect(url_for("login"))
 
 @app.route('/search')
