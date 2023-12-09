@@ -97,19 +97,19 @@ def search():
 @app.route('/add_sku', methods=['GET', 'POST'])
 def add_sku():
     if request.method == 'POST':
+        user_id = session["user"].get("_id")
         fsku = request.form.get("sku")
         fname = request.form.get("product_name")
         if not fsku.isdigit() or len(fsku) > 10 or not fname:
             flash("Invalid input. Please ensure all fields are correctly filled.")
             return redirect(url_for('add_sku'))
         
-        existing_sku = mongo.db.inventory.find_one({"sku": fsku})
+        existing_sku = mongo.db.inventory.find_one({"sku": fsku, "user_id": user_id})
         if existing_sku:
             flash("SKU already exists. Please enter a unique SKU.")
             return redirect(url_for('add_sku'))
         
         fstock = 0
-        user_id = session["user"].get("_id")
         sku_data = {
             "sku": fsku,
             "product_name": fname,
