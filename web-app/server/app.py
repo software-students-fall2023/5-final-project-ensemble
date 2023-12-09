@@ -38,14 +38,15 @@ def login_required(f):
 
     return wrap
 
-@app.route('/')
+@app.route('/home/')
+@login_required
 def home():
     """Render home page."""
     inventory = list(mongo.inventory_db.inventory.find())
     inventory.sort(key=lambda x: int(x['sku']))
     return render_template('home.html', inventory=inventory)
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         from user.authentication import UserAuthentication
@@ -113,4 +114,5 @@ def sku_details(sku):
     sku = mongo.inventory_db.inventory.find_one({"sku": sku})
     return render_template('sku.html', sku=sku)
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

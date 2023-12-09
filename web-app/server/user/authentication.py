@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, session
 from passlib.hash import pbkdf2_sha256
 from app import mongo
-from models.user import User
+from user.user import User
 
 
 class UserAuthentication:
