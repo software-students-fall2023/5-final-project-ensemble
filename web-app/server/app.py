@@ -42,9 +42,10 @@ def login_required(f):
 @login_required
 def home():
     """Render home page."""
-    inventory = list(mongo.inventory_db.inventory.find())
+    inventory = list(mongo.db.inventory.find())
     inventory.sort(key=lambda x: int(x['sku']))
-    return render_template('home.html', inventory=inventory)
+    username = session["user"].get("username")
+    return render_template('home.html', inventory=inventory, user_name=username)
 
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -81,7 +82,7 @@ def search():
 
     name_match = {"product_name": re.compile(search_query, re.IGNORECASE)}
     query = {"$or": [sku_match, name_match]} if sku_match else name_match
-    inventory = mongo.inventory_db.inventory.find(query)
+    inventory = mongo.db.inventory.find(query)
 
     return render_template('home.html', inventory=inventory)
 
@@ -94,7 +95,7 @@ def add_sku():
             flash("Invalid input. Please ensure all fields are correctly filled.")
             return redirect(url_for('add_sku'))
         
-        existing_sku = mongo.inventory_db.inventory.find_one({"sku": fsku})
+        existing_sku = mongo.db.inventory.find_one({"sku": fsku})
         if existing_sku:
             flash("SKU already exists. Please enter a unique SKU.")
             return redirect(url_for('add_sku'))
@@ -105,13 +106,13 @@ def add_sku():
             "product_name": fname,
             "stock": fstock
         }
-        mongo.inventory_db.inventory.insert_one(sku_data)
+        mongo.db.inventory.insert_one(sku_data)
         return redirect(url_for('home'))
     return render_template('addsku.html')
 
 @app.route('/sku/<sku>')
 def sku_details(sku):
-    sku = mongo.inventory_db.inventory.find_one({"sku": sku})
+    sku = mongo.db.inventory.find_one({"sku": sku})
     return render_template('sku.html', sku=sku)
 
 if __name__ == "__main__":
