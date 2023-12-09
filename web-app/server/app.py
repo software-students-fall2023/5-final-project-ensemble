@@ -8,6 +8,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
 import re
+from functools import wraps
 
 load_dotenv()
 user = os.environ["MONGO_INITDB_ROOT_USERNAME"]
@@ -62,7 +63,7 @@ def register():
 
 @app.route("/signout")
 def signout():
-    from models.authentication import UserAuthentication
+    from user.authentication import UserAuthentication
 
     UserAuthentication().sign_out()
     return redirect(url_for("login"))
