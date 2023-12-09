@@ -8,17 +8,17 @@ class UserAuthentication:
     def sign_up(self):
         user = User().get_user()
 
-        if mongo.inventory_db.users.find_one({"username": user["username"]}):
+        if mongo.db.users.find_one({"username": user["username"]}):
             return jsonify({"error": "Username already in use"}), 400
 
-        if mongo.inventory_db.users.insert_one(user):
+        if mongo.db.users.insert_one(user):
             return self.start_session(user)
 
         return jsonify({"error": "Something went wrong"}), 400
 
 
     def login(self):
-        user = mongo.inventory_db.users.find_one({"username": request.form.get("username")})
+        user = mongo.db.users.find_one({"username": request.form.get("username")})
 
         if user and pbkdf2_sha256.verify(
             request.form.get("password"), user["password"]
