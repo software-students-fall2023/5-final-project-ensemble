@@ -9,7 +9,7 @@ $("form[name=register-form").submit(function(e) {
         data: data,
         dataType: "json",
         success: function(resp){
-            window.location.href = "/";
+            window.location.href = "/home/";
         },
         error: function(resp){
             console.log(resp);
@@ -26,12 +26,12 @@ $("form[name=login-form").submit(function(e) {
     var data = $form.serialize();
 
     $.ajax({
-        url: "/login",
+        url: "/",
         type: "POST",
         data: data,
         dataType: "json",
         success: function(resp){
-            window.location.href = "/";
+            window.location.href = "/home/";
         },
         error: function(resp){
             console.log(resp);
