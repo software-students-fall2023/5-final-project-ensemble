@@ -37,7 +37,7 @@
         </tbody>
     </table>
     <div class="user-menu" onclick="toggleDropdown()">
-        <i class="fa-solid fa-user"></i> {{ user_name }}
+        <i class="fa-solid fa-user"></i> {{ name }}
         <div id="myDropdown" class="dropdown-menu">
             <a href="#settings">Settings</a>
             <a href="{{ url_for('signout') }}">Sign Out</a>

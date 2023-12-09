@@ -38,15 +38,6 @@ def login_required(f):
 
     return wrap
 
-@app.route('/home/')
-@login_required
-def home():
-    """Render home page."""
-    inventory = list(mongo.db.inventory.find())
-    inventory.sort(key=lambda x: int(x['sku']))
-    username = session["user"].get("username")
-    return render_template('home.html', inventory=inventory, user_name=username)
-
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -54,6 +45,16 @@ def login():
 
         return UserAuthentication().login()
     return render_template("login.html")
+
+@app.route('/home/')
+@login_required
+def home():
+    """Render home page."""
+    user_id = session["user"].get("_id")
+    name = session["user"].get("name")
+    inventory = list(mongo.db.inventory.find({"user_id": user_id}))
+    inventory.sort(key=lambda x: int(x['sku']))
+    return render_template('home.html', inventory=inventory, name=name)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -71,9 +72,11 @@ def signout():
     return redirect(url_for("login"))
 
 @app.route('/search')
+@login_required
 def search():
-    """Implement search bar functionality"""
+    user_id = session["user"].get("_id")
     search_query = request.args.get('query')
+
     try:
         sku_query = int(search_query)
         sku_match = {"sku": sku_query}
@@ -81,8 +84,13 @@ def search():
         sku_match = {}
 
     name_match = {"product_name": re.compile(search_query, re.IGNORECASE)}
-    query = {"$or": [sku_match, name_match]} if sku_match else name_match
-    inventory = mongo.db.inventory.find(query)
+
+    query = {"$and": [{"user_id": user_id}, {"$or": [sku_match, name_match]}]}
+
+    if not sku_match:
+        query = {"$and": [{"user_id": user_id}, name_match]}
+
+    inventory = list(mongo.db.inventory.find(query))
 
     return render_template('home.html', inventory=inventory)
 
@@ -101,10 +109,12 @@ def add_sku():
             return redirect(url_for('add_sku'))
         
         fstock = 0
+        user_id = session["user"].get("_id")
         sku_data = {
             "sku": fsku,
             "product_name": fname,
-            "stock": fstock
+            "stock": fstock,
+            "user_id": user_id
         }
         mongo.db.inventory.insert_one(sku_data)
         return redirect(url_for('home'))
@@ -112,7 +122,8 @@ def add_sku():
 
 @app.route('/sku/<sku>')
 def sku_details(sku):
-    sku = mongo.db.inventory.find_one({"sku": sku})
+    user_id = session["user"].get("_id")
+    sku = mongo.db.inventory.find_one({"sku": sku, "user_id": user_id})
     return render_template('sku.html', sku=sku)
 
 if __name__ == "__main__":
