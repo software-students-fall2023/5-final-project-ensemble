@@ -47,8 +47,10 @@
         <div id="additional-buttons" class="hidden">
             <a href="{{ url_for('add_sku')}}">
                 <button class="rect-button">Add Product</button>
-              </a>
-            <button class="rect-button">Add Log</button>
+            </a>
+            <a href="{{ url_for('add_log')}}">
+                <button class="rect-button">Add Log</button>
+            </a>
         </div>
         <button id="main-add-button" class="round-button" onclick="toggleButtons()">+</button>
     </div>
