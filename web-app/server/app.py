@@ -129,5 +129,32 @@ def sku_details(sku):
     sku = mongo.db.inventory.find_one({"sku": sku, "user_id": user_id})
     return render_template('sku.html', sku=sku)
 
+@app.route('/add_log', methods=['GET', 'POST'])
+@login_required
+def add_log():
+    user_id = session["user"].get("_id")
+
+    if request.method == 'POST':
+        sku = request.form.get("sku")
+        action = request.form.get("action")
+        quantity = int(request.form.get("quantity"))
+
+        current_item = mongo.db.inventory.find_one({"sku": sku, "user_id": user_id})
+        if not current_item:
+            flash("SKU not found.")
+            return redirect(url_for('add_log'))
+
+        new_stock = current_item['stock'] + quantity if action == 'increase' else current_item['stock'] - quantity
+        if new_stock < 0:
+            flash("Cannot decrease stock below 0.")
+            return redirect(url_for('add_log'))
+
+        mongo.db.inventory.update_one({"sku": sku, "user_id": user_id}, {"$set": {"stock": new_stock}})
+
+        flash("Stock updated successfully.")
+        return redirect(url_for('home'))
+
+    return render_template('add_log.html')
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
