@@ -65,6 +65,7 @@ def register():
     return render_template("register.html")
 
 @app.route("/signout")
+@login_required
 def signout():
     from user.authentication import UserAuthentication
 
@@ -95,6 +96,7 @@ def search():
     return render_template('home.html', inventory=inventory)
 
 @app.route('/add_sku', methods=['GET', 'POST'])
+@login_required
 def add_sku():
     if request.method == 'POST':
         user_id = session["user"].get("_id")
@@ -121,6 +123,7 @@ def add_sku():
     return render_template('addsku.html')
 
 @app.route('/sku/<sku>')
+@login_required
 def sku_details(sku):
     user_id = session["user"].get("_id")
     sku = mongo.db.inventory.find_one({"sku": sku, "user_id": user_id})
