@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel=stylesheet href="{{ url_for('static', filename='addsku.css') }}">
+    <title>Edit SKU</title>
+</head>
+<body>
+    <header>
+        <h1>Edit SKU</h1>
+    </header>
+    <main>
+        <form method="POST" action="{{ url_for('edit_sku', sku=sku.sku )}}">
+            <div class="input-group">
+                <strong>SKU:</strong>
+                <input type="text" id="sku" name="sku" placeholder="Enter SKU" pattern="\d{1,10}" title="SKU must be a numeric value with a maximum of 10 digits" required>
+            </div>
+            <div class="input-group">
+                <strong>Product Name:</strong>
+                <input type="text" id="product_name" name="product_name" placeholder="Enter Product Name" required>
+            </div>
+            <div class="buttons">
+                <input type="submit" value="Edit SKU" />
+                <a href="{{ url_for('home') }}"><input type="button" value="Cancel" /></a>
+            </div>
+        </form>
+       
+    </main>
+</body>
+</html>
