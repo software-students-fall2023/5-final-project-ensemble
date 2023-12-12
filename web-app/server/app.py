@@ -156,5 +156,31 @@ def add_log():
 
     return render_template('add_log.html')
 
+@app.route('/sku/<sku>/edit_sku', methods=['GET', 'POST'])
+@login_required
+def edit_sku(sku):
+    user_id = session["user"].get("_id")
+    sku = mongo.db.inventory.find_one({"sku": sku, "user_id": user_id})
+    
+    if request.method == 'POST':
+        fsku = request.form.get("sku")
+        fname = request.form.get("product_name")
+        #change
+        if not fsku.isdigit() or len(fsku) > 10 or not fname:
+            flash("Invalid input. Please ensure all fields are correctly filled.")
+            return redirect(url_for('edit_sku', sku=sku))
+        
+        existing_sku = mongo.db.inventory.find_one({"sku": fsku, "user_id": user_id})
+        if existing_sku and existing_sku != sku['sku']:
+            flash("SKU already exists. Please enter a unique SKU.")
+            return redirect(url_for('edit_sku', sku=sku))
+        
+        mongo.db.inventory.find_one_and_update(
+            {"sku": sku['sku'], "user_id": user_id} , {'$set': {'product_name': fname, 'sku':fsku }}
+            )
+        return redirect(url_for('home'))
+    
+    return render_template('editsku.html', sku=sku)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
