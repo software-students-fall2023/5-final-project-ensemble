@@ -76,6 +76,7 @@ def signout():
 @login_required
 def search():
     user_id = session["user"].get("_id")
+    name = session["user"].get("name")
     search_query = request.args.get('query')
 
     try:
@@ -93,7 +94,7 @@ def search():
 
     inventory = list(mongo.db.inventory.find(query))
 
-    return render_template('home.html', inventory=inventory)
+    return render_template('home.html', inventory=inventory, name=name)
 
 @app.route('/add_sku', methods=['GET', 'POST'])
 @login_required
