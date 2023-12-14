@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='addsku.css') }}">
+    <title>Delete SKU</title>
+</head>
+<body>
+    <header>
+        <h1>Delete SKU</h1>
+    </header>
+    <main>
+        <form method="POST" action="{{ url_for('delete_sku') }}">
+            <div class="input-group">
+                <strong>SKU:</strong>
+                <input type="text" id="sku" name="sku" placeholder="Enter SKU to delete" required>
+            </div>
+            <div class="buttons">
+                <input type="submit" value="Delete SKU" />
+                <a href="{{ url_for('home') }}"><input type="button" value="Cancel" /></a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
