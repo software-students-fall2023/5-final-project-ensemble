@@ -183,5 +183,26 @@ def edit_sku(sku):
     
     return render_template('editsku.html', sku=sku)
 
+@app.route('/delete_sku', methods=['GET', 'POST'])
+@login_required
+def delete_sku():
+    if request.method == 'POST':
+        user_id = session["user"].get("_id")
+        fsku = request.form.get("sku")
+
+        if not fsku.isdigit() or len(fsku) > 10:
+            flash("Invalid SKU. Please enter a valid numeric SKU.")
+            return redirect(url_for('delete_sku'))
+
+        existing_sku = mongo.db.inventory.find_one({"sku": fsku, "user_id": user_id})
+        if not existing_sku:
+            flash("SKU not found.")
+            return redirect(url_for('delete_sku'))
+
+        mongo.db.inventory.delete_one({"sku": fsku, "user_id": user_id})
+        flash("SKU deleted successfully.")
+        return redirect(url_for('home'))
+    return render_template('deletesku.html')
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
