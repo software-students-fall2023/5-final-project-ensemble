@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... head elements ... -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='deletesku.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Delete SKU</h1>
+    </header>
+    <main>
+        <p>Are you sure you want to delete the following SKU?</p>
+        <div class="details-group">
+            <strong>SKU:</strong>
+            <p id="sku">{{sku.sku}}</p>
+        </div>
+        <div class="details-group">
+            <strong>Product Name:</strong>
+            <p id="productName">{{sku.product_name}}</p>
+        </div>
+        <div class="buttons">
+            <form method="POST" action="{{ url_for('confirm_delete_sku', sku=sku.sku )}}">
+                <input type="submit" value="Confirm Delete" />
+            </form>
+            <a href="{{ url_for('home', sku=sku.sku) }}"><input type="button" value="Cancel" /></a>
+        </div>
+    </main>
+</body>
+</html>
