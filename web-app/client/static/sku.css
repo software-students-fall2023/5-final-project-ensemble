@@ -31,15 +31,35 @@ main {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.buttons a {
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.buttons a,
+.right-buttons a {
     text-decoration: none;
     color: #ffffff;
     background-color: #333;
     padding: 10px 20px;
     border-radius: 5px;
     display: inline-block;
-    margin-bottom: 1rem;
+    margin-left: 10px;
     cursor: pointer;
+}
+
+.buttons a:hover,
+.right-buttons a:hover {
+    background-color: #4d4d4d;
+}
+
+#delete {
+    background-color: red;
+}
+
+#delete:hover {
+    background-color: #cc0000;
 }
 
 .details-group {
@@ -55,12 +75,4 @@ main {
 .details-group p {
     padding: 8px;
     border-radius: 5px;
-}
-
-.delete-button {
-    background-color: #333; 
-}
-
-.delete-button:hover {
-    background-color: red;
 }
