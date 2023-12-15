@@ -56,3 +56,11 @@ main {
     padding: 8px;
     border-radius: 5px;
 }
+
+.delete-button {
+    background-color: #333; 
+}
+
+.delete-button:hover {
+    background-color: red;
+}
