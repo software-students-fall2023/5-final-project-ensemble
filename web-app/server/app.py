@@ -79,12 +79,7 @@ def search():
     name = session["user"].get("name")
     search_query = request.args.get('query')
 
-    try:
-        sku_query = int(search_query)
-        sku_match = {"sku": sku_query}
-    except ValueError:
-        sku_match = {}
-
+    sku_match = {"sku": str(search_query)}
     name_match = {"product_name": re.compile(search_query, re.IGNORECASE)}
 
     query = {"$and": [{"user_id": user_id}, {"$or": [sku_match, name_match]}]}

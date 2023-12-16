@@ -12,11 +12,12 @@
     </header>
     <main>
         <div class="buttons">
-            <a href="javascript:history.back()" id="back">&#8592; Back</a>
-            <a href= "{{url_for('edit_sku', sku=sku.sku)}}" id="edit"> Edit </a>
-            <a href="{{ url_for('delete_sku', sku=sku.sku) }}" id="delete" class="button delete-button">Delete</a>
-
-        </div>
+            <a href="{{url_for('edit_sku', sku=sku.sku)}}" id="edit"> Edit </a>
+            <div class="right-buttons">
+                <a href="javascript:history.back()" id="back">&#8592; Back</a>
+                <a href="{{ url_for('delete_sku', sku=sku.sku) }}" id="delete">Delete</a>
+            </div>
+        </div>        
         <div class="details-group">
             <strong>SKU:</strong>
             <p id="sku">{{sku.sku}}</p>
