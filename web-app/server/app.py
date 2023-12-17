@@ -13,7 +13,7 @@ from functools import wraps
 load_dotenv()
 user = os.environ["MONGO_INITDB_ROOT_USERNAME"]
 password = os.environ["MONGO_INITDB_ROOT_PASSWORD"]
-uri = f"mongodb://{user}:{password}@localhost:27017"
+uri = f"mongodb://{user}:{password}@mongo:27017/db?authSource=admin"
 
 mongo = MongoClient(uri, server_api=ServerApi('1'))
 
@@ -21,7 +21,7 @@ try:
     mongo.admin.command("ping")
     print("successfully connected to mongo")
 except pymongo.errors.ConnectionFailure as e:
-    print(e)
+    print("Failed:",e)
 
 app=Flask(__name__, template_folder='../client/templates', static_folder='../client/static')
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
@@ -197,4 +197,4 @@ def confirm_delete_sku(sku):
     return redirect(url_for('home'))
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=3000)
