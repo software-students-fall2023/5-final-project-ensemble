@@ -1,3 +1,5 @@
+[![CI/CD Workflow](https://github.com/software-students-fall2023/5-final-project-ensemble/actions/workflows/CICD.yml/badge.svg)](https://github.com/software-students-fall2023/5-final-project-ensemble/actions/workflows/CICD.yml)
+
 # SKU Tracker
 
 This webapp allows a user to track products and how stocked the products are. The user can add products to the database, and then add stock to the products. The user can also view the products and their stock levels.
