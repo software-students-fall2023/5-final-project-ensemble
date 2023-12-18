@@ -111,6 +111,7 @@ def add_sku():
         
         if not fstock.isdigit() or not fstock:
             flash("Invalid input. Fix stock input.")
+            return redirect(url_for('add_sku'))
 
         sku_data = {
             "sku": fsku,
