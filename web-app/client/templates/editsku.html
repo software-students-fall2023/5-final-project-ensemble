@@ -14,11 +14,15 @@
         <form method="POST" action="{{ url_for('edit_sku', sku=sku.sku )}}">
             <div class="input-group">
                 <strong>SKU:</strong>
-                <input type="text" id="sku" name="sku" placeholder="Enter SKU" pattern="\d{1,10}" title="SKU must be a numeric value with a maximum of 10 digits" required>
+                <input type="text" id="sku" name="sku" placeholder="Enter SKU" pattern="\d{1,10}" title="SKU must be a numeric value with a maximum of 10 digits">
             </div>
             <div class="input-group">
                 <strong>Product Name:</strong>
-                <input type="text" id="product_name" name="product_name" placeholder="Enter Product Name" required>
+                <input type="text" id="product_name" name="product_name" placeholder="Enter Product Name">
+            </div>
+            <div class="input-group">
+                <strong>Stock</strong>
+                <input type="text" name="stock" placeholder="Enter Stock">
             </div>
             <div class="buttons">
                 <input type="submit" value="Edit SKU" />
