@@ -30,6 +30,10 @@ Once running the application, you can use the application by opening localhost:3
 
 Link for docker image: [Docker Hub](https://hub.docker.com/repository/docker/verse1/sku-tracker)
 
+## Example of The Running Application
+
+[Example](http://161.35.180.124:3000/)
+
 ## Authors
 
 - [Nawaf](https://github.com/Verse1)
