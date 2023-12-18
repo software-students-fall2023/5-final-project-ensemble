@@ -61,4 +61,5 @@ input[type="text"], input[type="number"], select {
 
 .buttons input:hover {
     background-color: #555;
+    cursor: pointer;
 }
