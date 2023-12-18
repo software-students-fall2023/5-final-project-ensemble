@@ -19,7 +19,9 @@ cd 5-final-project-ensemble
 cp .env.example .env
 docker-compose up --build
 ```
+## Docker
 
+Link for docker image: [Docker Hub](https://hub.docker.com/repository/docker/verse1/sku-tracker)
 
 ## Authors
 
