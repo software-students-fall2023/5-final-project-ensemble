@@ -13,6 +13,7 @@ jobs:
     env:
       MONGO_INITDB_ROOT_USERNAME: ${{secrets.MONGO_INITDB_ROOT_USERNAME}}
       MONGO_INITDB_ROOT_PASSWORD: ${{secrets.MONGO_INITDB_ROOT_PASSWORD}}
+      FLASK_SECRET_KEY: ${{secret.FLASK_SECRET_KEY}}
 
     steps:
     - uses: actions/checkout@v2
