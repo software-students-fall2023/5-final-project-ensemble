@@ -26,6 +26,25 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+
+  delivery:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: verse1
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Build and push sku-tracker Docker image
+      run: |
+        docker build -t verse1/sku-tracker:latest ./web-app
+        docker push verse1/sku-tracker:latest
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
