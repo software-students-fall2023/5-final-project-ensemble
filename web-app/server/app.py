@@ -98,8 +98,10 @@ def add_sku():
         user_id = session["user"].get("_id")
         fsku = request.form.get("sku")
         fname = request.form.get("product_name")
+        fstock = request.form.get("stock")
+
         if not fsku.isdigit() or len(fsku) > 10 or not fname:
-            flash("Invalid input. Please ensure all fields are correctly filled.")
+            flash("Invalid input. Fix SKU and/or product name input.")
             return redirect(url_for('add_sku'))
         
         existing_sku = mongo.db.inventory.find_one({"sku": fsku, "user_id": user_id})
@@ -107,7 +109,9 @@ def add_sku():
             flash("SKU already exists. Please enter a unique SKU.")
             return redirect(url_for('add_sku'))
         
-        fstock = 0
+        if not fstock.isdigit() or not fstock:
+            flash("Invalid input. Fix stock input.")
+
         sku_data = {
             "sku": fsku,
             "product_name": fname,
@@ -162,8 +166,6 @@ def edit_sku(sku):
         fsku = request.form.get("sku")
         fname = request.form.get("product_name")
         fstock = request.form.get("stock")
-
-        #change
         
         if fsku:
             if not fsku.isdigit() or len(fsku) > 10:
