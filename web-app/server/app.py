@@ -161,18 +161,32 @@ def edit_sku(sku):
     if request.method == 'POST':
         fsku = request.form.get("sku")
         fname = request.form.get("product_name")
+        fstock = request.form.get("stock")
+
         #change
-        if not fsku.isdigit() or len(fsku) > 10 or not fname:
-            flash("Invalid input. Please ensure all fields are correctly filled.")
-            return redirect(url_for('edit_sku', sku=sku))
         
-        existing_sku = mongo.db.inventory.find_one({"sku": fsku, "user_id": user_id})
-        if existing_sku and existing_sku != sku['sku']:
-            flash("SKU already exists. Please enter a unique SKU.")
-            return redirect(url_for('edit_sku', sku=sku))
+        if fsku:
+            if not fsku.isdigit() or len(fsku) > 10:
+                flash("Invalid input. Please fix sku input.")
+                return redirect(url_for('edit_sku', sku=sku))
+            existing_sku = mongo.db.inventory.find_one({"sku": fsku, "user_id": user_id})
+            if existing_sku and existing_sku != sku['sku']:
+                flash("SKU already exists. Please enter a unique SKU.")
+                return redirect(url_for('edit_sku', sku=sku))
+        else:
+            fsku = sku['sku']
+        if fstock:
+            if not fstock.isdigit():
+                flash("Invalid input. Please fix stock input.")
+                return redirect(url_for('edit_sku', sku=sku))
+        else:
+            fstock = sku['stock']
+        
+        if not fname:
+            fname = sku['product_name']
         
         mongo.db.inventory.find_one_and_update(
-            {"sku": sku['sku'], "user_id": user_id} , {'$set': {'product_name': fname, 'sku':fsku }}
+            {"sku": sku['sku'], "user_id": user_id} , {'$set': {'product_name': fname, 'sku':fsku, 'stock': fstock}},
             )
         return redirect(url_for('home'))
     
