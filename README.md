@@ -21,6 +21,11 @@ cd 5-final-project-ensemble
 cp .env.example .env
 docker-compose up --build
 ```
+
+## Usage
+
+Once running the application, you can use the application by opening localhost:3000 in your browser. You can then add products to the database using their SKU, Name, and stock. You can adjust the stock of the products or adjust any information about the product. You can also delete products from the database.
+
 ## Docker
 
 Link for docker image: [Docker Hub](https://hub.docker.com/repository/docker/verse1/sku-tracker)
