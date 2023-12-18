@@ -1,0 +1,27 @@
+name: CI/CD Workflow
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    env:
+      MONGO_INITDB_ROOT_USERNAME: ${{secrets.MONGO_INITDB_ROOT_USERNAME}}
+      MONGO_INITDB_ROOT_PASSWORD: ${{secrets.MONGO_INITDB_ROOT_PASSWORD}}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
