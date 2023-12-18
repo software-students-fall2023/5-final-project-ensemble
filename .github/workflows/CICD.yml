@@ -26,3 +26,21 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: deploy app
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{secrets.SERVER_IP}}
+        username: ${{secrets.SERVER_USER}}
+        key: ${{secrets.SERVER_KEY}}
+        script: |
+          cd 5-final-project-ensemble
+          git pull
+          docker-compose down
+          docker-compose up --build -d
