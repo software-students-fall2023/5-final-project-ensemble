@@ -5,11 +5,14 @@ on:
     types: [closed]
     branches:
       - main
+  push:
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
     env:
       MONGO_INITDB_ROOT_USERNAME: ${{secrets.MONGO_INITDB_ROOT_USERNAME}}
       MONGO_INITDB_ROOT_PASSWORD: ${{secrets.MONGO_INITDB_ROOT_PASSWORD}}
@@ -26,10 +29,29 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+
+  delivery:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: verse1
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Build and push sku-tracker Docker image
+      run: |
+        docker build -t verse1/sku-tracker:latest ./web-app
+        docker push verse1/sku-tracker:latest
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
     steps:
     - uses: actions/checkout@v2
 
