@@ -145,7 +145,7 @@ def add_log():
             flash("SKU not found.")
             return redirect(url_for('add_log'))
 
-        new_stock = current_item['stock'] + quantity if action == 'increase' else current_item['stock'] - quantity
+        new_stock = int(current_item['stock']) + quantity if action == 'increase' else int(current_item['stock']) - quantity
         if new_stock < 0:
             flash("Cannot decrease stock below 0.")
             return redirect(url_for('add_log'))
