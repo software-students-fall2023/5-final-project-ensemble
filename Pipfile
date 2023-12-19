@@ -10,6 +10,9 @@ pymongo = "*"
 requests = "*"
 passlib = "*"
 uuid = "*"
+pytest = "*"
+mongomock = "*"
+pytest-cov = "*"
 
 [dev-packages]
 
