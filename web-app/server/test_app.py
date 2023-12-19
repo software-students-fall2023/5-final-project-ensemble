@@ -84,3 +84,8 @@ def test_confirm_delete_sku(client):
     with client:
         response = client.post('/sku/123/confirm_delete_sku')
         assert response.status_code == 302
+
+def test_register_page(client):
+    response = client.get('/register')
+    assert response.status_code == 200
+    assert b"register" in response.data
