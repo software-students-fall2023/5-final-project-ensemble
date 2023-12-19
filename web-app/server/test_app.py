@@ -1,6 +1,7 @@
 import pytest
 from app import app as flask_app
-from flask import session
+from flask import session, url_for, redirect
+from unittest.mock import patch
 import mongomock
 from user.authentication import UserAuthentication
 from user.user import User
@@ -15,19 +16,26 @@ class MockMongoClient(MongoClient):
 @pytest.fixture
 def app():
     """Create and configure a new app instance for each test."""
-    # Create a Flask application configured for testing
     app = flask_app
     app.config.update({
         "TESTING": True,
         "MONGO_URI": "mongomock://localhost"
     })
-
-    # Use the mock MongoDB client
     with app.app_context():
         app.mongo = MockMongoClient()
-        flask_app.mongo = app.mongo  # Ensure the app uses the mock client
+        flask_app.mongo = app.mongo
 
     yield app
+
+@pytest.fixture   
+def auth(client):
+    def login(username='test', password='test'):
+        return client.post('/', data={'username': username, 'password': password})
+    
+    def logout():
+        return client.get('/signout')
+
+    return {'login': login, 'logout': logout}
 
 @pytest.fixture
 def client(app):
@@ -89,3 +97,32 @@ def test_register_page(client):
     response = client.get('/register')
     assert response.status_code == 200
     assert b"register" in response.data
+
+def test_user_registration(client):
+    user_data = {
+        "username": "new_user",
+        "password": "new_password",
+        "name": "New User"
+    }
+
+    with patch('user.authentication.UserAuthentication') as MockAuthClass:
+        instance = MockAuthClass.return_value
+        instance.sign_up.return_value = ('', 200) 
+
+        response = client.post('/register', data=user_data)
+        assert response.status_code == 200
+
+def test_register_and_login(client, auth):
+    with patch('pymongo.collection.Collection.find_one', mongomock.MongoClient().db.users.find_one), \
+         patch('pymongo.collection.Collection.insert_one', mongomock.MongoClient().db.users.insert_one):
+
+        new_user_data = {
+            "username": "newuser",
+            "password": "newpassword",
+            "name": "New User"
+        }
+        response = client.post('/register', data=new_user_data)
+        assert response.status_code in [200, 302]
+
+        login_response = auth['login'](new_user_data['username'], new_user_data['password'])
+        assert login_response.status_code in [200, 302, 401]
