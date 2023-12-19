@@ -126,3 +126,8 @@ def test_register_and_login(client, auth):
 
         login_response = auth['login'](new_user_data['username'], new_user_data['password'])
         assert login_response.status_code in [200, 302, 401]
+
+def test_add_sku_page(client):
+    response = client.get('/add_sku')
+    assert response.status_code == 302
+    assert b'Redirecting' in response.data
