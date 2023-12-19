@@ -13,6 +13,9 @@ uuid = "*"
 pytest = "*"
 mongomock = "*"
 pytest-cov = "*"
+pyopenssl = "*"
+coverage = "*"
+pytest-mock = "*"
 
 [dev-packages]
 
