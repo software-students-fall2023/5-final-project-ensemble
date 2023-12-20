@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+python-dotenv = "*"
+pymongo = "*"
+requests = "*"
+passlib = "*"
+uuid = "*"
+pytest = "*"
+mongomock = "*"
+pytest-cov = "*"
+pyopenssl = "*"
+coverage = "*"
+pytest-mock = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

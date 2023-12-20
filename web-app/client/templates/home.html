@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='home.css') }}"
+    />
+    <title>Inventory</title>
+    <script src="https://kit.fontawesome.com/184c9c0230.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <form action="{{url_for('search')}}" method="get" class="search-bar">
+        <input type="text" name="query" placeholder="Enter SKU or Product Name">
+        <button type="submit">Search</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Product Name</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in inventory %}
+            <tr>
+                <td><a href="{{ url_for('sku_details', sku=item['sku']) }}">{{ item['sku'] }}</a></td>
+                <td><a href="{{ url_for('sku_details', sku=item['sku']) }}">{{ item['product_name'] }}</a></td>
+                <td><a href="{{ url_for('sku_details', sku=item['sku']) }}">{{ item['stock'] }}</a></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No items found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="user-menu" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user"></i> {{ name }}
+        <div id="myDropdown" class="dropdown-menu">
+            <a href="{{ url_for('signout') }}">Sign Out</a>
+        </div>
+    </div>
+    <div class="add-button-container">
+        <div id="additional-buttons" class="hidden">
+            <a href="{{ url_for('add_sku')}}">
+                <button class="rect-button">Add Product</button>
+            </a>
+            <a href="{{ url_for('add_log')}}">
+                <button class="rect-button">Add Log</button>
+            </a>
+        </div>
+        <button id="main-add-button" class="round-button" onclick="toggleButtons()">+</button>
+    </div>
+    <script>
+        function toggleButtons() {
+            var additionalButtons = document.getElementById("additional-buttons");
+            additionalButtons.classList.toggle("hidden");
+        }
+    
+        window.onclick = function(event) {
+            var mainAddButton = document.getElementById("main-add-button");
+            var additionalButtons = document.getElementById("additional-buttons");
+    
+            if (event.target !== mainAddButton && !additionalButtons.classList.contains("hidden")) {
+                additionalButtons.classList.add("hidden");
+            }
+        }
+
+        function toggleDropdown() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-menu')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

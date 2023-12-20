@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel=stylesheet href="{{ url_for('static', filename='add_log.css') }}">
+    <title>Add Log</title>
+</head>
+<body>
+    <header>
+        <h1>Add Log</h1>
+    </header>
+    <main>
+        <div id="flash-message-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                        <script>
+                            setTimeout(function() {
+                                document.querySelector('.flash-message').remove();
+                            }, 5000);
+                        </script>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <form method="POST" action="{{ url_for('add_log') }}">
+            <label for="sku">SKU:</label>
+            <input type="text" id="sku" name="sku" required>
+
+            <label for="action">Action:</label>
+            <select id="action" name="action">
+                <option value="increase">Increase</option>
+                <option value="decrease">Decrease</option>
+            </select>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required>
+
+            <div class="buttons">
+                <input type="submit" value="Submit">
+                <a href="{{ url_for('home') }}"><input type="button" value="Cancel" /></a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
