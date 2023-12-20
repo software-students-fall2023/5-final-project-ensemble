@@ -156,3 +156,26 @@ def test_add_sku(client, auth):
                 "stock": "50",
                 "user_id": "mocked_user_id"
             })
+
+def test_update_sku(client, auth):
+    mock_user = {'_id': 'mocked_user_id', 'username': 'username', 'password': 'dummy_hashed_password'}
+    mock_sku = {'sku': '123456', 'product_name': 'Test Product', 'stock': '50', 'user_id': 'mocked_user_id'}
+    updated_data = {
+        "sku": '123456',
+        "product_name": "Updated Product",
+        "stock": "60"
+    }
+    
+    with patch('pymongo.collection.Collection.find_one', side_effect=[mock_user, mock_sku, None]), \
+         patch('passlib.hash.pbkdf2_sha256.verify', return_value=True), \
+         patch('pymongo.collection.Collection.find_one_and_update') as mock_update:
+        
+        auth_response = auth['login']('username', 'password')
+        assert auth_response.status_code in [200, 302]
+
+        response = client.post(f'/sku/{mock_sku["sku"]}/edit_sku', data=updated_data)
+        assert response.status_code == 302
+        mock_update.assert_called_with(
+            {"sku": mock_sku["sku"], "user_id": mock_user["_id"]},
+            {'$set': updated_data}
+        )
