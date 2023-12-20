@@ -6,6 +6,7 @@ import mongomock
 from user.authentication import UserAuthentication
 from user.user import User
 from pymongo.mongo_client import MongoClient
+from passlib.hash import pbkdf2_sha256
 
 # Mock MongoDB Client
 class MockMongoClient(MongoClient):
@@ -131,3 +132,27 @@ def test_add_sku_page(client):
     response = client.get('/add_sku')
     assert response.status_code == 302
     assert b'Redirecting' in response.data
+
+def test_add_sku(client, auth):
+    with patch('pymongo.collection.Collection.find_one', return_value={'_id': 'mocked_user_id', 'username': 'username', 'password': 'dummy_hashed_password'}), \
+         patch('passlib.hash.pbkdf2_sha256.verify', return_value=True):
+        auth_response = auth['login']('username', 'password')
+        assert auth_response.status_code in [200, 302]
+
+        with patch('pymongo.collection.Collection.find_one', return_value=None), \
+             patch('pymongo.collection.Collection.insert_one') as mock_insert:
+            
+            sku_data = {
+                "sku": "12345",
+                "product_name": "Test Product",
+                "stock": "50"
+            }
+            response = client.post('/add_sku', data=sku_data)
+            assert response.status_code == 302
+
+            mock_insert.assert_called_once_with({
+                "sku": "12345",
+                "product_name": "Test Product",
+                "stock": "50",
+                "user_id": "mocked_user_id"
+            })
